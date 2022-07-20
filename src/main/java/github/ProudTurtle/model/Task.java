@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tasks")
-public class Task {
+public class Task{
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
@@ -15,8 +15,9 @@ public class Task {
     private String description;
     private boolean done;
     private LocalDateTime deadline;
-    private LocalDateTime createdOn;
-    private LocalDateTime updatedOn;
+    @Embedded
+    private Audit audit = new Audit();
+
 
     public Task() {
 
@@ -26,7 +27,7 @@ public class Task {
         return id;
     }
 
-    public void setId(int id) {
+     void setId(int id) {
         this.id = id;
     }
 
@@ -54,8 +55,12 @@ public class Task {
         this.deadline = deadline;
     }
 
-    @PrePersist
-    void prePresist(){
-        createdOn = LocalDateTime.now();
+    public void updateFrom(Task source){
+        description = source.description;
+        done = source.done;
+        deadline = source.deadline;
+
     }
+
+
 }
