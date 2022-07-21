@@ -8,14 +8,16 @@ import github.ProudTurtle.model.TaskRepository;
 import github.ProudTurtle.model.projection.GroupReadModel;
 import github.ProudTurtle.model.projection.GroupWriteModel;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequestScope
 public class TaskGroupService {
     private final TaskGroupRepository repository;
-    private final TaskRepository taskRepository;
+    private final TaskRepository  taskRepository;
 
     TaskGroupService(final TaskGroupRepository repository, final TaskRepository taskRepository) {
         this.repository = repository;
