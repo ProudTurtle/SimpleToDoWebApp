@@ -37,7 +37,7 @@ public class Project {
         return groups;
     }
 
-     Set<ProjectStep> getSteps() {
+     public Set<ProjectStep> getSteps() {
         return steps;
     }
 
