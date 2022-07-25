@@ -17,6 +17,10 @@ public class Project {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "project")
     private Set<ProjectStep> steps;
 
+    Project(){
+
+    }
+
     public String getDescription() {
         return description;
     }
