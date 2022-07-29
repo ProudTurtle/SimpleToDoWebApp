@@ -47,7 +47,13 @@ public class ProjectService {
                                     ).collect(Collectors.toSet())
                     );
                     targetGroup.setProject(project);
-                    return taskGroupRepository.save(targetGroup);
+                    try {
+                        return taskGroupRepository.save(targetGroup);
+                    } catch (NoSuchFieldException e) {
+                        throw new RuntimeException(e);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
                 }).orElseThrow(() -> new IllegalArgumentException("Project with given id not found"));
         return new GroupReadModel(result);
     }

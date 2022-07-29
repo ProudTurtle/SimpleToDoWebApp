@@ -24,7 +24,7 @@ public class TaskGroupService {
         this.taskRepository = taskRepository;
     }
 
-    public GroupReadModel createGroup(GroupWriteModel source){
+    public GroupReadModel createGroup(GroupWriteModel source) throws NoSuchFieldException, IllegalAccessException {
         TaskGroup result = repository.save(source.toGroup());
         return new GroupReadModel(result);
     }
@@ -36,7 +36,7 @@ public class TaskGroupService {
                 .collect(Collectors.toList());
     }
 
-    public void toggleGroup(int groupId){
+    public void toggleGroup(int groupId) throws NoSuchFieldException, IllegalAccessException {
         if(taskRepository.existsByDoneIsFalseAndGroup_Id(groupId)){
             throw new IllegalStateException("Group has undone tasks. Done all the task first!");
         }
