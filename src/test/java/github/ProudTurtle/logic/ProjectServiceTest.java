@@ -6,7 +6,6 @@ import github.ProudTurtle.model.projection.GroupReadModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -27,7 +26,7 @@ class ProjectServiceTest {
 
         TaskConfigurationProperties mockConfig = configurationReturning(false);
 
-        var toTest = new ProjectService(null, mockGroupRepository, mockConfig);
+        var toTest = new ProjectService(null, mockGroupRepository, mockConfig, null);
 
         var exception = catchThrowable(() -> toTest.createGroup(LocalDateTime.now(), 0));
 
@@ -48,7 +47,7 @@ class ProjectServiceTest {
 
         TaskConfigurationProperties mockConfig = configurationReturning(true);
 
-        var toTest = new ProjectService(mockRepository, null, mockConfig);
+        var toTest = new ProjectService(mockRepository, null, mockConfig, null);
 
         var exception = catchThrowable(() -> toTest.createGroup(LocalDateTime.now(), 0));
 
@@ -68,7 +67,7 @@ class ProjectServiceTest {
 
         TaskConfigurationProperties mockConfig = configurationReturning(true);
 
-        var toTest = new ProjectService(mockRepository, mockGroupRepository, mockConfig);
+        var toTest = new ProjectService(null, mockGroupRepository, mockConfig, null);
 
         var exception = catchThrowable(() -> toTest.createGroup(LocalDateTime.now(), 0));
 
@@ -89,10 +88,11 @@ class ProjectServiceTest {
                 );
 
         InMemoryGroupRepository inMemoryGroupRepo = inMemoryGroupRepository();
-        var countBeforeCall = inMemoryGroupRepo.count();
+        var serviceWithInMemRepo = dummyGroupService(inMemoryGroupRepo);
+        int countBeforeCall = inMemoryGroupRepo.count();
         TaskConfigurationProperties mockConfig = configurationReturning(true);
 
-        var toTest = new ProjectService(mockRepository, inMemoryGroupRepo, mockConfig);
+        var toTest = new ProjectService(mockRepository, inMemoryGroupRepo, mockConfig, serviceWithInMemRepo);
 
         GroupReadModel result = toTest.createGroup(today,1);
 
@@ -100,6 +100,10 @@ class ProjectServiceTest {
         assertThat(result.getDeadline()).isEqualTo(today.minusDays(1));
         assertThat(result.getTasks()).allMatch(task -> task.getDescription().equals("foo"));
         assertThat(countBeforeCall + 1).isEqualTo(inMemoryGroupRepo.count());
+    }
+
+    private TaskGroupService dummyGroupService(InMemoryGroupRepository inMemoryGroupRepo) {
+        return new TaskGroupService(inMemoryGroupRepo, null);
     }
 
     private Project projectWith(String projectDescription, Set<Integer> daysToDeadline){
@@ -153,7 +157,7 @@ class ProjectServiceTest {
         @Override
         public TaskGroup save(TaskGroup entity) throws NoSuchFieldException, IllegalAccessException {
             if(entity.getId() != 0){
-                var field = Task.class.getDeclaredField("id");
+                var field = TaskGroup.class.getDeclaredField("id");
                 field.setAccessible(true);
                 field.set(entity, ++index);
             }

@@ -26,11 +26,13 @@ class TaskControllerE2Test {
 
     @Test
     void httpGet_returnsAllTasks(){
+        int initial = repo.findAll().size();
         repo.save(new Task("foo", LocalDateTime.now()));
         repo.save(new Task("bar", LocalDateTime.now()));
 
+
        Task[] result = restTemplate.getForObject("http://localhost:" + port + "/tasks", Task[].class);
 
-       assertThat(result).hasSize(2);
+       assertThat(result).hasSize(initial + 2);
     }
 }
