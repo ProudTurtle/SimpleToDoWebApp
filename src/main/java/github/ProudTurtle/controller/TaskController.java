@@ -1,14 +1,13 @@
 package github.ProudTurtle.controller;
 
 
+import github.ProudTurtle.logic.TaskService;
 import github.ProudTurtle.model.Task;
 import github.ProudTurtle.model.TaskRepository;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 
 @RestController
@@ -23,15 +23,18 @@ import java.util.List;
 public class TaskController {
     private final TaskRepository repository;
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
+    private final TaskService service;
 
-    TaskController( TaskRepository repository){
+    TaskController(TaskRepository repository, TaskService service){
         this.repository = repository;
+        this.service = service;
     }
 
     @GetMapping(params = {"!sort", "!page", "!size"})
-    ResponseEntity<List<Task>> readAllTasks(){
+    CompletableFuture<ResponseEntity<List<Task>>> readAllTasks(){
         logger.warn("Exposing all the tasks!");
-        return ResponseEntity.ok(repository.findAll());
+        return service.findAllAsync().thenApply(ResponseEntity::ok);
+
     }
 
     @GetMapping
@@ -40,7 +43,7 @@ public class TaskController {
         return ResponseEntity.ok(repository.findAll(page));
     }
 
-    @PutMapping("/id}")
+    @PutMapping("/{id}")
     ResponseEntity<?> updateTask(@PathVariable int id, @RequestBody @Valid Task toUpdate){
         if(!repository.existsById(id)){
             return ResponseEntity.notFound().build();
