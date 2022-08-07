@@ -7,43 +7,40 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tasks")
-public class Task{
+public class Task {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotBlank(message = "Tasks description must not be empty")
+    @NotBlank(message = "Task's description must not be empty")
     private String description;
     private boolean done;
     private LocalDateTime deadline;
     @Embedded
-    private final Audit audit = new Audit();
+    private Audit audit = new Audit();
     @ManyToOne
     @JoinColumn(name = "task_group_id")
     private TaskGroup group;
 
-
-    public Task() {
-
+    Task() {
     }
 
-    public Task(String description, LocalDateTime deadline){
-        this(description,deadline, null);
+    public Task(String description, LocalDateTime deadline) {
+        this(description, deadline, null);
     }
 
-    public Task(String description, LocalDateTime deadline, TaskGroup group){
-        this.deadline = deadline;
+    public Task(String description, LocalDateTime deadline, TaskGroup group) {
         this.description = description;
-        if(group != null){
+        this.deadline = deadline;
+        if (group != null) {
             this.group = group;
         }
     }
-
 
     public int getId() {
         return id;
     }
 
-     void setId(int id) {
+    void setId(final int id) {
         this.id = id;
     }
 
@@ -51,7 +48,7 @@ public class Task{
         return description;
     }
 
-    void setDescription(String description) {
+    void setDescription(final String description) {
         this.description = description;
     }
 
@@ -59,7 +56,7 @@ public class Task{
         return done;
     }
 
-    public void setDone(boolean done) {
+    public void setDone(final boolean done) {
         this.done = done;
     }
 
@@ -67,24 +64,22 @@ public class Task{
         return deadline;
     }
 
-    public void setDeadline(LocalDateTime deadline) {
+    void setDeadline(final LocalDateTime deadline) {
         this.deadline = deadline;
     }
 
-    public TaskGroup getGroup() {
+    TaskGroup getGroup() {
         return group;
     }
 
-    public void setGroup(TaskGroup group) {
+    void setGroup(final TaskGroup group) {
         this.group = group;
     }
 
-    public void updateFrom(Task source){
+    public void updateFrom(final Task source) {
         description = source.description;
         done = source.done;
         deadline = source.deadline;
         group = source.group;
     }
-
-
 }

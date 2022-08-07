@@ -13,7 +13,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.persistence.Temporal;
 
-@EnableAsync
+
 @SpringBootApplication
 public class SimpleToDoWebAppApplication  {
 

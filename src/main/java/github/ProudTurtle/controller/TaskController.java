@@ -30,11 +30,11 @@ public class TaskController {
         this.service = service;
     }
 
-    @GetMapping(params = {"!sort", "!page", "!size"})
-    CompletableFuture<ResponseEntity<List<Task>>> readAllTasks(){
-        logger.warn("Exposing all the tasks!");
-        return service.findAllAsync().thenApply(ResponseEntity::ok);
 
+    @GetMapping(value = "/tasks", params = {"!sort", "!page", "!size"})
+    ResponseEntity<List<Task>> readAllTasks() {
+        logger.warn("Exposing all the tasks!");
+        return ResponseEntity.ok(repository.findAll());
     }
 
     @GetMapping

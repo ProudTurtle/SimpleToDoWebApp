@@ -17,12 +17,11 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 @Configuration
-public class TestConfiguration {
-
+class TestConfiguration {
     @Bean
     @Primary
-    @Profile({"!integration"})
-    DataSource e2eTestDataSource(){
+    @Profile("!integration")
+    DataSource e2eTestDataSource() {
         var result = new DriverManagerDataSource("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "sa", "");
         result.setDriverClassName("org.h2.Driver");
         return result;
@@ -30,16 +29,10 @@ public class TestConfiguration {
 
     @Bean
     @Primary
-    @Profile({"integration", "!prod"})
+    @Profile("integration")
     TaskRepository testRepo() {
         return new TaskRepository() {
-
             private Map<Integer, Task> tasks = new HashMap<>();
-
-            @Override
-            public Page<Task> findAll(Pageable page) {
-                return null;
-            }
 
             @Override
             public List<Task> findAll() {
@@ -47,27 +40,32 @@ public class TestConfiguration {
             }
 
             @Override
-            public List<Task> findByDone(boolean done) {
+            public Page<Task> findAll(final Pageable page) {
                 return null;
             }
 
             @Override
-            public Optional<Task> findById(Integer id) {
+            public Optional<Task> findById(final Integer id) {
                 return Optional.ofNullable(tasks.get(id));
             }
 
             @Override
-            public boolean existsById(Integer id) {
+            public boolean existsById(final Integer id) {
                 return tasks.containsKey(id);
             }
 
             @Override
-            public boolean existsByDoneIsFalseAndGroup_Id(Integer groupId) {
+            public boolean existsByDoneIsFalseAndGroup_Id(final Integer groupId) {
                 return false;
             }
 
             @Override
-            public Task save(Task entity) {
+            public List<Task> findByDone(final boolean done) {
+                return null;
+            }
+
+            @Override
+            public Task save(final Task entity) {
                 int key = tasks.size() + 1;
                 try {
                     var field = Task.class.getDeclaredField("id");
@@ -76,11 +74,14 @@ public class TestConfiguration {
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
-
-                tasks.put(key,entity);
+                tasks.put(key, entity);
                 return tasks.get(key);
             }
-        };
 
+            @Override
+            public List<Task> findAllByGroup_Id(final Integer groupId) {
+                return List.of();
+            }
+        };
     }
 }
