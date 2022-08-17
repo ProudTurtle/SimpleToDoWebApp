@@ -2,13 +2,12 @@ package github.ProudTurtle.logic;
 
 
 
+import github.ProudTurtle.model.Project;
 import github.ProudTurtle.model.TaskGroup;
 import github.ProudTurtle.model.TaskGroupRepository;
 import github.ProudTurtle.model.TaskRepository;
 import github.ProudTurtle.model.projection.GroupReadModel;
 import github.ProudTurtle.model.projection.GroupWriteModel;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +24,11 @@ public class TaskGroupService {
     }
 
     public GroupReadModel createGroup(GroupWriteModel source) throws NoSuchFieldException, IllegalAccessException {
-        TaskGroup result = repository.save(source.toGroup());
+        return  createGroup(source, null);
+    }
+
+    public GroupReadModel createGroup(GroupWriteModel source, Project project) throws NoSuchFieldException, IllegalAccessException {
+        TaskGroup result = repository.save(source.toGroup(project));
         return new GroupReadModel(result);
     }
 

@@ -53,7 +53,7 @@ public class ProjectService {
                                     ).collect(Collectors.toSet())
                     );
                     try {
-                       return taskGroupService.createGroup(targetGroup);
+                       return taskGroupService.createGroup(targetGroup, project);
                     } catch (NoSuchFieldException | IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
