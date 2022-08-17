@@ -1,30 +1,37 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name ="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo App: projects</title>
-    <link rel = "stylesheet" href="https://igoradamenko.github.io/awsm.css/css/awsm_theme_pearl-lusta.min.css">
+    <link rel="stylesheet" href="https://igoradamenko.github.io/awsm.css/css/awsm_theme_pearl-lusta.min.css">
 </head>
 <body>
 <main>
     <!--/*@thymesVar id="project" type="github.ProudTurtle.model.projection.ProjectWriteModel"*/-->
     <form method="post" th:action="@{/projects}" th:object="${project}">
-  <fieldset>
-    <legend>Nowy projekt</legend>
-      <label>Opis
-          <input type = "text" th:field="*{description}"/>
-      </label>
-      <fieldset th:each="step, stepStat: *{steps}">
-          <legend th:text="|Krok ${stepStat.index + 1}|"></legend>
-          <label>Opis
-              <input type = "text" th:field="*{steps[0].description}"/>
-          </label>
-          <label>Dni do końca projektu
-              <input type = "text" th:field="*{steps[0].daysToDeadline}"/>
-          </label>
-      </fieldset>
-  </fieldset>
+        <fieldset>
+            <legend>Nowy projekt</legend>
+            <label>Opis
+                <input type="text" th:field="*{description}"/>
+            </label>
+            <fieldset th:each="step, stepStat: *{steps}">
+                <legend th:text="|Krok ${stepStat.index + 1}|"></legend>
+                <label>Opis
+                    <input type="text" th:field="*{steps[__${stepStat.index}__].description}"/>
+                </label>
+                <label>Dni do końca projektu
+                    <input type="number" th:field="*{steps[__${stepStat.index}__].daysToDeadline}"/>
+                </label>
+            </fieldset>
+            <div>
+                <button type="submit" name="addStep">+</button>
+            </div>
+        </fieldset>
+        <p>
+            <button type="submit">Dodaj</button>
+            <button type="reset">Wyczyść</button>
+        </p>
     </form>
 </main>
 </body>
