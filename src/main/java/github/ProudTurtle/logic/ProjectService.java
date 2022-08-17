@@ -5,6 +5,7 @@ import github.ProudTurtle.model.*;
 import github.ProudTurtle.model.projection.GroupReadModel;
 import github.ProudTurtle.model.projection.GroupTaskWriteModel;
 import github.ProudTurtle.model.projection.GroupWriteModel;
+import github.ProudTurtle.model.projection.ProjectWriteModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,8 +31,9 @@ public class ProjectService {
         return repository.findAll();
     }
 
-    public Project save(Project toSave) {
-        return repository.save(toSave);
+
+    public Project save(final ProjectWriteModel toSave) {
+        return repository.save(toSave.toProject());
     }
 
     public GroupReadModel createGroup(LocalDateTime deadline, int projectId) {
