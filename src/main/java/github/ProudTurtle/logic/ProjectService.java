@@ -36,31 +36,31 @@ public class ProjectService {
         return repository.save(toSave.toProject());
     }
 
+
+
     public GroupReadModel createGroup(LocalDateTime deadline, int projectId) {
         if (!config.getTemplate().isAllowMultipleTasks() && taskGroupRepository.existsByDoneIsFalseAndProject_Id(projectId)) {
             throw new IllegalStateException("Only one undone group from project is allowed");
         }
-        GroupReadModel result = repository.findById(projectId)
+        return repository.findById(projectId)
                 .map(project -> {
                     var targetGroup = new GroupWriteModel();
                     targetGroup.setDescription(project.getDescription());
                     targetGroup.setTasks(
                             project.getSteps().stream()
                                     .map(projectStep -> {
-                                             var task = new GroupTaskWriteModel();
-                                             task.setDescription(projectStep.getDescription());
-                                             task.setDeadline(deadline.plusDays(projectStep.getDaysToDeadline()));
-                                             return task;
+                                                var task = new GroupTaskWriteModel();
+                                                task.setDescription(projectStep.getDescription());
+                                                task.setDeadline(deadline.plusDays(projectStep.getDaysToDeadline()));
+                                                return task;
                                             }
-                                    ).collect(Collectors.toSet())
+                                    ).collect(Collectors.toList())
                     );
                     try {
-                       return taskGroupService.createGroup(targetGroup, project);
+                        return taskGroupService.createGroup(targetGroup, project);
                     } catch (NoSuchFieldException | IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
-
                 }).orElseThrow(() -> new IllegalArgumentException("Project with given id not found"));
-        return result;
     }
 }

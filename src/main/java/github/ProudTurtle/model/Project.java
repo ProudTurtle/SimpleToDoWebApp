@@ -17,41 +17,38 @@ public class Project {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "project")
     private Set<ProjectStep> steps;
 
-    public Project(){
+    public Project() {
+    }
 
+    public int getId() {
+        return id;
+    }
+
+    void setId(final int id) {
+        this.id = id;
     }
 
     public String getDescription() {
         return description;
     }
 
-     public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
-     public int getId() {
-        return id;
-    }
-
-     void setId(int id) {
-        this.id = id;
-    }
-
-     Set<TaskGroup> getGroups() {
+    Set<TaskGroup> getGroups() {
         return groups;
     }
 
-     public Set<ProjectStep> getSteps() {
+    void setGroups(final Set<TaskGroup> groups) {
+        this.groups = groups;
+    }
+
+    public Set<ProjectStep> getSteps() {
         return steps;
     }
 
-     public void setSteps(Set<ProjectStep> steps) {
+    public void setSteps(final Set<ProjectStep> steps) {
         this.steps = steps;
-    }
-
-    void setGroups(Set<TaskGroup> groups) {
-        this.groups = groups;
-
-
     }
 }
