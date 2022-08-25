@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 
 //@Service
 public class ProjectService {
-    private  ProjectRepository repository;
-    private  TaskGroupRepository taskGroupRepository;
-    private  TaskConfigurationProperties config;
-    private TaskGroupService taskGroupService;
+    private final ProjectRepository repository;
+    private final TaskGroupRepository taskGroupRepository;
+    private final TaskConfigurationProperties config;
+    private final TaskGroupService taskGroupService;
 
 
     public ProjectService(final ProjectRepository repository, TaskGroupRepository taskGroupRepository,
